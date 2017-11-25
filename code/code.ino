@@ -16,6 +16,17 @@ void setBalken(unsigned char column, unsigned char height){                   //
     output[column] = columnHeight[h];
 }
 
+void show(int loops)
+{
+  for(int i = 0; i < loops; i++)
+  {
+    PORTD = output[i];    
+    digitalWrite(clock,HIGH);
+     delayMicroseconds(5);
+    digitalWrite(clock,LOW);
+  }
+}
+
 void setup() {
   Serial.begin(115200);                                             //use the serial port
   TIMSK0 = 0;                                                       //turn off timer0 for lower jitter
@@ -67,6 +78,7 @@ void loop() {
       Serial.print(maxW);
       Serial.print(" ");
     }
+    show(10);
     Serial.println("");
   }
 
