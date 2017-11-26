@@ -12,7 +12,7 @@ byte output[10] = {B00000000, B00000000, B00000000, B00000000, B00000000, B00000
 byte columnHeight[9] = {B00000000, B00000001, B00000011, B00000111, B00001111, B00011111, B00111111, B01111111, B11111111};
 
 void setBalken(unsigned char column, unsigned char height){                   //calculation of the height of each column
-    unsigned char h = (unsigned char)map(height, 0, 255, 0, 8);
+    unsigned char h = (unsigned char)map(height, 0, 20, 0, 8);
     output[column] = columnHeight[h];
 }
 
@@ -20,6 +20,9 @@ void show(int loops)
 {
   for(int i = 0; i < loops; i++)
   {
+    Serial.print(output[i]);
+    Serial.print("  ");
+    Serial.println("");
     PORTD = output[i];    
     digitalWrite(clock,HIGH);
      delayMicroseconds(5);
@@ -31,7 +34,7 @@ void setup() {
   Serial.begin(115200);                                             //use the serial port
   TIMSK0 = 0;                                                       //turn off timer0 for lower jitter
   ADCSRA = 0xe5;                                                    //set the adc to free running mode
-  ADMUX = 0b01000001;                                               //use pin A7
+  ADMUX = 0b01000000;                                               
   DIDR0 = 0x01;                                                     //turn off the digital input for 
   analogReference(EXTERNAL);
   DDRD=B11111111;
@@ -67,7 +70,7 @@ void loop() {
 
     for(unsigned char i = 0; i < 10; i++){
       int maxW = 0;
-        for(unsigned char x = grenzen[i]; x < grenzen[i+1];x++){
+        for(unsigned char x = grenzen[i]; x < grenzen[i+1]; x++){
  
            if((unsigned char)fft_lin_out[x] > maxW){
             maxW = fft_lin_out[x];
@@ -75,11 +78,11 @@ void loop() {
         }
 
       setBalken(i, maxW);
-      Serial.print(maxW);
-      Serial.print(" ");
+      //Serial.print(maxW);
+      //Serial.print(" ");
     }
     show(10);
-    Serial.println("");
+    //Serial.println("");
   }
 
 }
